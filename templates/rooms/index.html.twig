@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Triangle | Rooms{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        .card {
+            margin-top: 10px;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="example-wrapper">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h1>Rooms</h1>
+                </div>
+            </div>
+
+            <hr/>
+        
+            <div class="row">
+                {% for room in rooms %}
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                {{ room.title|e }}</h5>
+                            <form action="{{ path('push') }}" method="POST">
+                                <button class="btn btn-success" type="submit">Push</button>
+                            </form>
+                            <a class="btn btn-primary" href="{{ path('edit', {'id': room.id}) }}">Edit</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const url = new URL('{{ mercurePublishUrl }}');
+        url.searchParams.append ('topic', '{{ absolute_url (path ('push')) }}');
+
+        const eventSource = new EventSource (url);
+        eventSource.onmessage = (e) => {
+            alert ('PING!');
+            console.log (e);
+        };
+    </script>
+{% endblock %}
