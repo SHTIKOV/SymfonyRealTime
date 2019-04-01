@@ -19,6 +19,8 @@
                 </div>
             </div>
 
+            <div class="noties"></div>
+
             <hr/>
         
             <div class="row">
@@ -43,13 +45,18 @@
     </div>
 
     <script>
-        const url = new URL('{{ mercurePublishUrl }}');
-        url.searchParams.append ('topic', '{{ absolute_url (path ('push')) }}');
+        const u = new URL('{{ mercurePublishUrl }}');
+        u.searchParams.append('topic', "{{ absolute_url (path ('push')) }}");
+        const es = new EventSource(u);
+        es.onmessage = e => {
+            let data = JSON.parse (e.data),
+                noties = document.querySelectorAll ('.noties'),
+                newAlert = document.createElement ('div');
 
-        const eventSource = new EventSource (url);
-        eventSource.onmessage = (e) => {
-            alert ('PING!');
-            console.log (e);
-        };
+            newAlert.className = "alert alert-warning alert-dismissible fade show";
+            newAlert.innerHTML = "<strong>Message:</strong> "+data.message+"<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>";
+
+            noties[0].appendChild (newAlert);
+        }
     </script>
 {% endblock %}

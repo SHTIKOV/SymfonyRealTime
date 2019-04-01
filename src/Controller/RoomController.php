@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mercure\Publisher;
 use Symfony\Component\Mercure\Update;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 use App\Entity\Room;
 
@@ -32,7 +33,7 @@ class RoomController extends AbstractController
         $rooms = $this->getDoctrine ()
             ->getRepository (Room::class)
             ->findAll ();
-
+            
         return $this->render ('rooms/index.html.twig', [
             'rooms' => $rooms,
             'mercurePublishUrl' => $this->mercurePublishUrl,
@@ -74,8 +75,16 @@ class RoomController extends AbstractController
      * @Route("/push", name="push", methods={"POST"})
      */
     public function pushRoom (Publisher $publisher) {
-        $update = new Update ("http://localhost:8000/push", "[]");
-        $publisher ($update);
+        $data = [
+            'message' => 'YES! This is WORK!!!!'
+        ];
+
+        $publisher (
+            new Update (
+                $this->generateUrl ('push', [], UrlGeneratorInterface::ABSOLUTE_URL),
+                json_encode ($data)
+            )
+        );
 
         return $this->redirect ($this->generateUrl ('rooms'));
     }
