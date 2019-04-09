@@ -19,3 +19,6 @@ You can push notification on other client on page `/rooms` and edit created room
 `bin/console s:r`
 
 And go to rout: `/rooms`
+
+## Run for `Hub server`
+`JWT_KEY='myJWTKey' ADDR=':3000' DEMO=1 ALLOW_ANONYMOUS=1 CORS_ALLOWED_ORIGINS=* PUBLISH_ALLOWED_ORIGINS='http://localhost:3000' ./mercure`
